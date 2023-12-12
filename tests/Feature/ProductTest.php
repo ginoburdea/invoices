@@ -78,4 +78,31 @@ class ProductTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    public function test_successfully_delete_a_product(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $product = Product::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->delete(route('products.destroy', $product->id));
+
+        $response->assertStatus(302);
+        $response->assertRedirectToRoute('products.index');
+    }
+
+    public function test_throw_when_deleting_a_product_as_an_unauthorized_user(): void
+    {
+        $user = User::factory()->create();
+        $product = Product::factory()->create(['user_id' => $user->id]);
+
+        $unauthorized_user = User::factory()->create();
+        $this->actingAs($unauthorized_user);
+
+
+        $response = $this->delete(route('products.destroy', $product->id));
+
+        $response->assertForbidden();
+    }
+
 }
