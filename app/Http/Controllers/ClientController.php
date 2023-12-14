@@ -13,10 +13,10 @@ class ClientController extends Controller
      */
     public function index(Request $request)
     {
-        $products = $request->user()->products();
+        $clients = $request->user()->clients()->get();
 
         return Inertia::render('Clients/Index', [
-            'products' => $products
+            'clients' => $clients
         ]);
     }
 
