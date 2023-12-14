@@ -24,4 +24,22 @@ class ClientTest extends TestCase
         // Assert
         $response->assertOk();
     }
+
+    public function test_successfully_create_a_client(): void
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $client_data = Client::factory()->make();
+
+        $this->actingAs($user);
+
+        // Act
+        $response = $this->post(route('clients.store'), $client_data->toArray());
+
+        // Assert
+        $response->assertRedirectToRoute('clients.index');
+
+        $clients_count = Client::where('user_id', $user->id)->count();
+        $this->assertEquals($clients_count, 1);
+    }
 }

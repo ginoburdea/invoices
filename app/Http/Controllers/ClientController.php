@@ -33,7 +33,15 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $client_data = $request->validate([
+            'name' => ['required', 'string'],
+            'tax_id' => ['nullable', 'string'],
+            'address' => ['required', 'string'],
+        ]);
+
+        $request->user()->clients()->create($client_data);
+
+        return redirect(route('clients.index'));
     }
 
     /**
