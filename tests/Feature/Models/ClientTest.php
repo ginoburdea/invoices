@@ -61,4 +61,36 @@ class ClientTest extends TestCase
         $client->refresh();
         $this->assertEquals($client->name, $updated_client_data->name);
     }
+
+    public function test_successfully_delete_a_client(): void
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $client = Client::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+
+        // Act
+        $response = $this->delete(route('clients.destroy', $client->id));
+
+        // Assert
+        $response->assertRedirectToRoute('clients.index');
+        $this->assertThrows(fn() => $client->refresh());
+    }
+
+    public function test_throw_when_deleting_a_client_as_an_unauthorized_user(): void
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $product = Client::factory()->create(['user_id' => $user->id]);
+
+        $unauthorized_user = User::factory()->create();
+        $this->actingAs($unauthorized_user);
+
+        // Act
+        $response = $this->delete(route('clients.destroy', $product->id));
+
+        // Assert
+        $response->assertForbidden();
+    }
 }

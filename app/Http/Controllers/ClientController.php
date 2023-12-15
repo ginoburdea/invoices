@@ -84,6 +84,10 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        //
+        $this->authorize('delete', $client);
+
+        $client->delete();
+
+        return redirect(route('clients.index'));
     }
 }

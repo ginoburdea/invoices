@@ -45,7 +45,7 @@ class ClientPolicy
      */
     public function delete(User $user, Client $client): bool
     {
-        //
+        return $this->update($user, $client);
     }
 
     /**
