@@ -37,7 +37,7 @@ class ClientPolicy
      */
     public function update(User $user, Client $client): bool
     {
-        //
+        return $client->user()->is($user);
     }
 
     /**

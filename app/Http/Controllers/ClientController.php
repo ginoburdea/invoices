@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -65,7 +66,17 @@ class ClientController extends Controller
      */
     public function update(Request $request, Client $client)
     {
-        //
+        $this->authorize('update', $client);
+
+        $data = $request->validate([
+            'name' => ['required', 'string'],
+            'tax_id' => ['nullable', 'string'],
+            'address' => ['required', 'string'],
+        ]);
+
+        $client->update($data);
+
+        return redirect(route('clients.index'));
     }
 
     /**

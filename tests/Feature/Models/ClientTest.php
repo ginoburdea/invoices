@@ -42,4 +42,23 @@ class ClientTest extends TestCase
         $clients_count = Client::where('user_id', $user->id)->count();
         $this->assertEquals($clients_count, 1);
     }
+
+    public function test_successfully_update_a_client(): void
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $client = Client::factory()->create(['user_id' => $user->id]);
+        $updated_client_data = Client::factory()->make(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+
+        // Act
+        $response = $this->put(route('clients.update', $client->id), $updated_client_data->toArray());
+
+        // Assert
+        $response->assertRedirectToRoute('clients.index');
+
+        $client->refresh();
+        $this->assertEquals($client->name, $updated_client_data->name);
+    }
 }

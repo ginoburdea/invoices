@@ -42,7 +42,7 @@ Route::resource('products', ProductController::class)
     ->middleware(['auth', 'verified']);
 
 Route::resource('clients', ClientController::class)
-    ->only(['index', 'store'])
+    ->only(['index', 'store', 'update'])
     ->middleware(['auth', 'verified']);
 
 require __DIR__ . '/auth.php';
