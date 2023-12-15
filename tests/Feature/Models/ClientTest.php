@@ -43,6 +43,21 @@ class ClientTest extends TestCase
         $this->assertEquals($clients_count, 1);
     }
 
+    public function test_throw_when_creating_a_client_with_incomplete_data(): void
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $client = Client::factory()->make(['user_id' => $user->id])->makeHidden('name');
+
+        $this->actingAs($user);
+
+        // Act
+        $response = $this->post(route('clients.store'), $client->toArray());
+
+        // Assert
+        $response->assertSessionHasErrors(['name']);
+    }
+
     public function test_successfully_update_a_client(): void
     {
         // Arrange
@@ -60,6 +75,38 @@ class ClientTest extends TestCase
 
         $client->refresh();
         $this->assertEquals($client->name, $updated_client_data->name);
+    }
+
+    public function test_throw_when_updating_a_client_with_incomplete_data(): void
+    {
+        // Arrange
+        $user = User::factory()->create();
+        Client::factory()->create(['user_id' => $user->id]);
+        $new_product_data = Client::factory()->make()->makeHidden('name');
+
+        $this->actingAs($user);
+
+        // Act
+        $response = $this->post(route('clients.store'), $new_product_data->toArray());
+
+        // Assert
+        $response->assertSessionHasErrors(['name']);
+    }
+
+    public function test_throw_when_updating_a_client_as_an_unauthorized_user(): void
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $product = Client::factory()->create(['user_id' => $user->id]);
+
+        $unauthorized_user = User::factory()->create();
+        $this->actingAs($unauthorized_user);
+
+        // Act
+        $response = $this->delete(route('clients.update', $product->id));
+
+        // Assert
+        $response->assertForbidden();
     }
 
     public function test_successfully_delete_a_client(): void
