@@ -5,7 +5,7 @@
         "dev": "concurrently npm:*:dev --prefix-colors yellow,green,blue",
         "test": "start-server-and-test dev http://127.0.0.1:8000 'php artisan test'",
         "back:test": "nodemon --ext .php --exec php artisan test",
-        "back:dev": "php artisan serve",
+        "back:dev": "php artisan db:seed --class=DevDataSeeder && php artisan serve",
         "front:dev": "vite",
         "email:dev": "mailpit",
         "front:build": "vite build",
