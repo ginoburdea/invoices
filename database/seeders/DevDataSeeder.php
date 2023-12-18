@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Client;
+use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -26,6 +27,11 @@ class DevDataSeeder extends Seeder
 
         $state = array_fill(0, 5, ['user_id' => $user->id]);
         Product::factory()->count(5)->state(...$state)->create();
-        Client::factory()->count(5)->state(...$state)->create();
+        $clients = Client::factory()->count(5)->state(...$state)->create();
+
+        foreach ($clients as $index => $client) {
+            $state[$index]['client_id'] = $client->id;
+        }
+        Invoice::factory()->count(5)->state(...$state)->create();
     }
 }
