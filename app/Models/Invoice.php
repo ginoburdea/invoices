@@ -79,6 +79,8 @@ class Invoice extends Model
     protected static function booted(): void
     {
         static::creating(function (Invoice $invoice) {
+            $invoice->series = strtoupper($invoice->series);
+
             if ($invoice->draft) {
                 return;
             }
