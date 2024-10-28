@@ -39,7 +39,24 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'date' => ['required', 'date'],
+            'draft' => ['required', 'boolean'],
+            'paid' => ['required', 'boolean'],
+
+            'series' => ['required', 'string'],
+
+            'client_id' => ['required', 'integer', 'exists:clients,id'],
+
+            'products.*.quantity' => ['requires', 'integer', 'min:1'],
+            'products.*.id' => ['required', 'integer', 'exists:products,id'],
+        ]);
+
+        $invoice = $request->user()->invoices()->create($data);
+
+        error_log($invoice);
+
+        return redirect(route('invoices.index'));
     }
 
     /**

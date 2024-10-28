@@ -68,7 +68,18 @@ class Invoice extends Model
 
     protected function paid(): Attribute
     {
-        return new Attribute(get: fn() => $this->paid_at ? true : false);
+        return new Attribute(
+            get: fn() => $this->paid_at ? true : false,
+            // set: fn(mixed $value) => [
+            //     'paid_at' => $value  == true? new \DateTime()
+            // ]
+            set: function (mixed $value, array $attributes) {
+                // if (!$attributes['draft'] && $value == true) {
+                // }
+                // return [];
+                return ['paid_at' => $value == true ? new \DateTime() : null];
+            }
+        );
     }
 
     protected function total(): Attribute

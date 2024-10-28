@@ -16,7 +16,9 @@ class Product extends Model
         'sku',
         'price',
         'tax_percentage',
-        'user_id'
+        'user_id',
+        'invoice_id',
+        'parent_id',
     ];
     protected $visible = [
         'id',
